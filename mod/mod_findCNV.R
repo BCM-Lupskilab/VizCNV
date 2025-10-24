@@ -8,7 +8,7 @@ slm.eta=0.00001
 chromset <- paste0("chr",c(1:22, "X"))
 # gain and loss classification
 gain.seg.mean=c(0.4,3)
-loss.seg.mean=c(-0.8,-5)
+loss.seg.mean=c(-0.8,-20)
 # segmentation length cutoff
 min.num.mark = 10
 # minimum size(bp) of overlap considering a same event
