@@ -9,8 +9,11 @@ README
 
 This is a shiny app for chromosomal copy number variant analysis. It can
 parse the vcf file with SV calls, visualize CNV and B-allele frequency
-and genetic phasing information interactively. The VizCNV is still under
-active development, suggestions is appreciated.
+and genetic phasing information interactively. 
+```
+# quick start
+shiny::runGitHub(repo = "BCM-Lupskilab/VizCNV",ref="main")
+```
 
 [Download current
 version](https://github.com/cluhaowie/VizCNV/releases/tag/v4.2.4)
