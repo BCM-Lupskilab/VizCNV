@@ -13,7 +13,7 @@ and genetic phasing information interactively. The VizCNV is still under
 active development, suggestions is appreciated.
 
 [Download current
-version](https://github.com/cluhaowie/VizCNV/releases/tag/v4.2.3)
+version](https://github.com/cluhaowie/VizCNV/releases/tag/v4.2.4)
 
 [Pull docker image](https://hub.docker.com/r/duclare123/vizcnv_dev)
 
