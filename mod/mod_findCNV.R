@@ -113,6 +113,29 @@ get_cnv_all <- function(pr_seg, mo_seg, fa_seg){
   return(x)
 }
 
+get_cnv_all_pr_only <- function(pr_seg){
+  pr_dup <- pr_seg %>% 
+    filter(seg.mean >= gain.seg.mean[1] & seg.mean <= gain.seg.mean[2]) %>% 
+    filter(num.mark >=min.num.mark ) %>% 
+    mutate(type = "gain")
+  
+  pr_del <- pr_seg %>% 
+    filter(seg.mean <= loss.seg.mean[1] & seg.mean >= loss.seg.mean[2]) %>% 
+    filter(num.mark >=min.num.mark) %>% 
+    mutate(type = "loss")
+  
+  x <- rbind(pr_dup, pr_del)
+  type <- x$type
+  x <- x %>% makeGRangesFromDataFrame(keep.extra.columns = T)
+  
+  pr_idx <- findOverlaps(x, pr_seg %>% makeGRangesFromDataFrame(keep.extra.columns = T), minoverlap = min.overlap.size, select = "last")
+  pr_log <- pr_seg[pr_idx,]$seg.mean
+  
+  mcols(x) <- cbind(pr_log, type)
+  x <- x %>% as.data.frame()
+  return(x)
+}
+
 get_overlap <- function(df, SegDup_merge, RefSeq_gr, OMIM){
   
   # create empty lists to store the results
@@ -229,7 +252,7 @@ mod_findCNV_Server <- function(id, pr_rd, mo_rd, fa_rd, SegDup_merge, RefSeq_gr,
       mo_rd <- normalization(mo_rd)
       fa_rd <- normalization(fa_rd)
       
-      id <- showNotification("Finding CNVs", type = "message", duration = NULL)
+      id <- showNotification("Finding CNVs (trio)", type = "message", duration = NULL)
       pr_seg <- getAllSeg(pr_rd %>% as.data.frame())
       mo_seg <- getAllSeg(mo_rd %>% as.data.frame())
       fa_seg <- getAllSeg(fa_rd %>% as.data.frame())
@@ -301,6 +324,96 @@ mod_findCNV_Server <- function(id, pr_rd, mo_rd, fa_rd, SegDup_merge, RefSeq_gr,
       return(table() %>% as.data.frame())
     }
   )
+}
+
+#' find denovo CNV UI
+#'
+#' rendering DT
+#'
+#'  
+#'
+#' @return reactive df table and 
+#'
+#' @examples
+#' mod_findCNV_UI("table")
+#'
+#' @export
+mod_findCNV_pr_only_UI <- function(id) {
+	  ns <- NS(id)
+  tagList(
+	      dataTableOutput(ns("table"))
+	        )
+}
+
+
+#' find dnCNV Server
+#'
+#' preprocess tables for rendering
+#'
+#' @param pr_seg proband read depth segments from segmentation algo
+#' @param mo_seg mother read depth segments from segmentation algo
+#' @param fa_seg father read depth segments from segmentation algo
+#'
+#' @return reactive df table 
+#'
+#' @examples
+#' mod_findCNV_Server("table", pr_seg, mo_seg, fa_seg)
+#'
+#' @export
+mod_findCNV_pr_only_Server <- function(id, pr_rd, SegDup_merge, RefSeq_gr, OMIM) {
+	  moduleServer(
+	           id,
+		       function(input, output, session) {
+			             
+			             names(pr_rd) <- c("chr", "start", "end", "coverage")
+    
+	         pr_rd <- normalization(pr_rd)
+		       
+		       id <- showNotification("Finding CNVs (proband only)", type = "message", duration = NULL)
+		       pr_seg <- getAllSeg(pr_rd %>% as.data.frame())
+		             cnv_all <- get_cnv_all_pr_only(pr_seg)
+		             # print(class(cnv_all))
+		             # print(cnv_all)
+		             df <- get_overlap(cnv_all, SegDup_merge, RefSeq_gr, OMIM)
+			           removeNotification(id = id)
+			           df <- df %>% 
+					           mutate(pr_log = as.numeric(pr_log))
+					         df <- df %>% 
+				         mutate(pr_lvl = case_when(pr_log <= -1.525 ~ "HOM_DEL", 
+                                    pr_log >= hetdel.range[1] & pr_log <= hetdel.range[2] ~ "HET_DEL",
+																	                                       pr_log >= nml.range[1] & pr_log <= nml.range[2] ~ "NML",
+                  pr_log >= dup.range[1] & pr_log <= dup.range[2] ~ "DUP",
+                  pr_log >= trp.range[1] & pr_log <= trp.range[2] ~ "TRP",
+                      pr_log >= multigain ~ "MUL_GAIN",
+                     TRUE ~ "UND"),
+      mo_lvl = "UNK",
+              fa_lvl = "UNK")
+
+
+df <- df %>% 
+         mutate(class = "UNK")
+
+       df <- df %>% 
+    mutate(inh = "UNK")
+       df <- df %>% 
+    mutate(across(c(pr_log), round, 2)) %>% 
+     mutate(across(c(SDOverlap, pr_lvl, mo_lvl, fa_lvl, type, class, inh), as.factor)) %>% 
+      dplyr::select(-strand) %>% 
+       dplyr::rename(chr = seqnames)
+     table <- reactive({
+       df
+ })
+    output$table <- renderDataTable(table(),
+      extensions=c("Responsive","Buttons"),
+         server = F,
+         editable = F,
+  filter = list(position = 'top', clear = T),
+            options = list(dom = 'Bfrtip',
+ buttons = c('copy','csv', 'excel'),
+                 autoWidth = T))
+    return(table() %>% as.data.frame())
+		           }
+			     )
 }
 
 

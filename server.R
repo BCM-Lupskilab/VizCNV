@@ -792,8 +792,6 @@ server <- function(input, output,session) {
   ## find CNV table
   observeEvent(input$btn_findCNV, {
     req(nrow(values$pr_rd)!=0)
-    req(nrow(values$m_rd)!=0)
-    req(nrow(values$f_rd)!=0)
     path <- "./data/"
     if(!is.null(values$SegDup_merge)){
       SegDup_merge <- data.table::fread(values$SegDup_merge)
@@ -830,7 +828,11 @@ server <- function(input, output,session) {
         filter(pheno_key  %in% c("3","4"))
     }
     w$show()
+    if((nrow(values$m_rd)==0) | (nrow(values$f_rd) == 0)){
+    	findCNV_table$t <- mod_findCNV_pr_only_Server("findCNV",values$pr_rd, SegDup_merge, RefSeq_gr, OMIM)
+    } else {
     findCNV_table$t <- mod_findCNV_Server("findCNV",values$pr_rd, values$m_rd, values$f_rd, SegDup_merge, RefSeq_gr, OMIM)
+    }
     updateTabItems(session, "tabs", "table")
     w$hide()
   })
