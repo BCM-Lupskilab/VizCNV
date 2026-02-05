@@ -34,7 +34,7 @@ models based segmentation is performed using
 
 Please cite the following article if you use VizCNV in your research:
 
-- Du, H., Jolly, A., Grochowski, C. M., Yuan, B., Dawood, M.,Jhangiani, S. N., Li, H., Muzny, D., Fatih, J. M., Coban-Akdemir, Z.,Carlin, M. E., Scheuerle, A. E., Witzl, K., Posey, J. E., Pendleton,M., Harrington, E., Juul, S., Hastings, P. J., Bi, W., … Liu, P.(2022). The multiple *de novo* copy number variant (M*dn*CNV)
-  phenomenon presents with peri-zygotic DNA mutational signatures and multilocus pathogenic variation. *Genome Medicine*, *14*(1), 122.
-- Du H, Lun MY, Gagarina L, Bengtsson JD, Grochowski CM, Mehaffey MG, et al. An integrated platform for concurrent structural and single-nucleotide variants improves copy-number detection and reveals pathogenic alleles in undiagnosed Mendelian families.(2026) *Genome Med*,*18*:16. Available from: http://dx.doi.org/10.1186/s13073-025-01593-8
+- Du, H., Jolly, A., Grochowski, C. M., Yuan, B., Dawood, M., Jhangiani, S. N., Li, H., Muzny, D., Fatih, J. M., Coban-Akdemir, Z., Carlin, M. E., Scheuerle, A. E., Witzl, K., Posey, J. E., Pendleton, M., Harrington, E., Juul, S., Hastings, P. J., Bi, W., … Liu, P. (2022). The multiple de novo copy number variant (MdnCNV) phenomenon presents with peri-zygotic DNA mutational signatures and multilocus pathogenic variation. *Genome Medicine*, *14*(1), 122. https://doi.org/10.1186/s13073-022-01123-w
+- Du, H., Lun, M. Y., Gagarina, L., Bengtsson, J. D., Grochowski, C. M., Mehaffey, M. G., Hwang, J. P., Jhangiani, S. N., Bhamidipati, S. V., Muzny, D. M., Poli, M. C., Ochoa, S., Chinn, I. K., Lindstrand, A., Posey, J. E., Gibbs, R. A., Liu, P., Lupski, J. R., & Carvalho, C. M. B. (2025). An integrated platform for concurrent structural and single-nucleotide variants improves copy-number detection and reveals pathogenic alleles in undiagnosed Mendelian families. *Genome Medicine*, *18*(1), 16. https://doi.org/10.1186/s13073-025-01593-8
+
 
